@@ -21,27 +21,27 @@ app.use(express.json());
 app.use(express.static("Public"));
 app.use("/api/auth", authRouter);
 app.use((req, res, next) => {
-  try {
-    const { id } = jwt.verify(
-      req?.headers?.authorization.split(" ")[1],
-      process.env.JWT_SECRET
-    );
-    if (id) {
-      req.userId = id;
-      return next();
-    } else {
-      return res.status(401).json({
-        message: "you must be have login first",
-        success: false,
-      });
-    }
-  } catch (error) {
-    return res.status(401).json({
-      message: "you must be have login first",
-      success: false,
-    });
-  }
-});
+//   try {
+//     const { id } = jwt.verify(
+//       req?.headers?.authorization.split(" ")[1],
+//       process.env.JWT_SECRET
+//     );
+//     if (id) {
+//       req.userId = id;
+//       return next();
+//     } else {
+//       return res.status(401).json({
+//         message: "you must be have login first",
+//         success: false,
+//       });
+//     }
+//   } catch (error) {
+//     return res.status(401).json({
+//       message: "you must be have login first",
+//       success: false,
+//     });
+//   }
+// });
 app.use("/api/categories", categoryRouter);
 app.use("/api/tasks", taskRouter);
 app.use("/api/users", userRouter);
