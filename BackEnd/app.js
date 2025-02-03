@@ -20,7 +20,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("Public"));
 app.use("/api/auth", authRouter);
-app.use((req, res, next) => {
+// app.use((req, res, next) => {
 //   try {
 //     const { id } = jwt.verify(
 //       req?.headers?.authorization.split(" ")[1],
