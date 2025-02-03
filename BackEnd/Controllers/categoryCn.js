@@ -2,6 +2,7 @@ import catchAsync from "../Utils/catchAsync.js";
 import jwt from 'jsonwebtoken'
 import Category from "../Models/categoryMd.js";
 import ApiFeatures from "../Utils/apiFeatures.js";
+import HandleERROR from "../Utils/handleError.js";
 export const createCategory = catchAsync(async (req, res, next) => {
   const { id } = jwt.verify(
     req?.headers?.authorization.split(" ")[1],
@@ -35,6 +36,64 @@ export const getAllCategory = catchAsync(async (req, res, next) => {
         success:true
       })
 });
-export const getOneCategory = catchAsync(async (req, res, next) => {});
-export const updateCategory = catchAsync(async (req, res, next) => {});
-export const removeCategory = catchAsync(async (req, res, next) => {});
+export const getOneCategory = catchAsync(async (req, res, next) => {
+  const { id:userId } = jwt.verify(
+    req?.headers?.authorization.split(" ")[1],
+    process.env.JWT_SECRET
+  );
+  const {id:categoryId}=req.params
+  const category = await Category.findOne({_id:categoryId,userId}).populate(
+    {
+      path:"userId",
+        select:"username email"
+    }
+  )
+  if(!category){
+    return next(new HandleERROR('you dont have permission',400))
+  }
+  return res.status(200).json({
+    category,
+    message:"Get Category Successfully",
+    success:true
+  })
+});
+export const updateCategory = catchAsync(async (req, res, next) => {
+  const { id:userId } = jwt.verify(
+    req?.headers?.authorization.split(" ")[1],
+    process.env.JWT_SECRET
+  );
+  const {id:categoryId}=req.params
+const newCategory = await Category.findByIdAndDelete({
+  _id: categoryId,
+  userId
+}
+)
+if(!newCategory){
+  return next(new HandleERROR('you dont have permission',400))
+}
+return res.status(200).json({
+  newCategory,
+  message:"Update Category Successfully",
+  success:true
+})
+});
+export const removeCategory = catchAsync(async (req, res, next) => {
+  const { id:userId } = jwt.verify(
+    req?.headers?.authorization.split(" ")[1],
+    process.env.JWT_SECRET
+  );
+  const {id:categoryId}=req.params
+const category = await Category.findByIdAndDelete({
+  _id: categoryId,
+  userId
+}
+)
+if(!category){
+  return next(new HandleERROR('you dont have permission',400))
+}
+return res.status(200).json({
+  message:"Delete Category Successfully",
+  success:true
+})
+});
+;
