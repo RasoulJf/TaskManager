@@ -1,5 +1,4 @@
 import catchAsync from "../Utils/catchAsync.js";
-import jwt from 'jsonwebtoken'
 import Category from "../Models/categoryMd.js";
 import ApiFeatures from "../Utils/apiFeatures.js";
 import HandleERROR from "../Utils/handleError.js";
