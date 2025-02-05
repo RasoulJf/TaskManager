@@ -50,7 +50,7 @@ if(!category){
 }
 return res.status(200).json({
   data:category,
-  message:"Update Category Successfully",
+  message:"Delete Category Successfully",
   success:true
 })
 });
