@@ -1,50 +1,52 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Container, Typography, TextField, Button, Box } from "@mui/material";
-import * as yup from "yup"; // اصلاح این خط
-import { data, useNavigate } from "react-router-dom";
+import * as yup from "yup";
+import { useNavigate } from "react-router-dom";
 import { Field, Formik } from "formik";
 import notify from "../../../../Utils/notify";
+import { AuthContext } from "../../../../Utils/AuthContext";
+
 const Login = ({ handlePageType }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const {handleAuth} = useContext(AuthContext);
+
   const validationSchema = yup.object({
-    username: yup
-      .string()
-      .required("Username Is Required")
-      .min(3, "Username Must Be 3 Character"),
+    username: yup.string().required("Username is required").min(3, "Username must be at least 3 characters"),
     password: yup
       .string()
-      .required("Password is required") // اضافه کردن اعتبارسنجی اجباری
+      .required("Password is required")
       .matches(
-        /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/,
+        /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
         "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character"
       ),
   });
 
   const handleLogin = async (values) => {
-    // اضافه کردن پارامتر values
     try {
-      const res = await fetch("http://localhost:5000/api/auth", {
+      const response = await fetch("http://localhost:5000/api/auth", {
         method: "POST",
         headers: {
-          // اصلاح این خط (Headers به headers تغییر یابد)
-          "Content-Type": "application/json", // اصلاح این خط (josn به json تغییر یابد)
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(values),
+      });
+
+      const data = await response.json();
+      console.log(data)
+      if (data?.success) {
+        notify("Login Successfully", "success");
+        handleAuth(data?.data?.token, data?.data?.user);
+        localStorage.setItem("token", data?.data?.token);
+        navigate("/");
+      } else {
+        notify(data?.message || "Login Failed", "error");
       }
-    );
-    const data = await res.json()
-    console.log(data)
-    if(res?.ok){
-      notify('Login Successfully','success')
-      localStorage.setItem('token',data?.data?.token)
-      navigate('/')
-    }else{
-      notify('Login Failed','error')
-    }
     } catch (error) {
-      console.log(error);
+      console.error("Login error:", error);
+      notify("An error occurred. Please try again.", "error");
     }
   };
+
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -59,31 +61,14 @@ const Login = ({ handlePageType }) => {
           boxShadow: 3,
         }}
       >
-        <Typography
-          component="h1"
-          variant="h5"
-          sx={{ fontWeconsoleight: "bold", mb: 2 }}
-        >
+        <Typography component="h1" variant="h5" sx={{ fontWeight: "bold", mb: 2 }}>
           Sign In
         </Typography>
-        <Formik
-          initialValues={{ username: "", password: "" }}
-          validationSchema={validationSchema}
-          onSubmit={handleLogin}
-        >
-          {(
-            { handleSubmit } // اضافه کردن handleSubmit
-          ) => (
-            <Box
-              component="form"
-              noValidate
-              sx={{ mt: 1, width: "100%" }}
-              onSubmit={handleSubmit} // اضافه کردن onSubmit
-            >
+        <Formik initialValues={{ username: "", password: "" }} validationSchema={validationSchema} onSubmit={handleLogin}>
+          {({ handleSubmit }) => (
+            <Box component="form" noValidate sx={{ mt: 1, width: "100%" }} onSubmit={handleSubmit}>
               <Field name="username">
-                {(
-                  { field, meta } // اضافه کردن Field props
-                ) => (
+                {({ field, meta }) => (
                   <TextField
                     {...field}
                     margin="normal"
@@ -94,8 +79,8 @@ const Login = ({ handlePageType }) => {
                     autoComplete="username"
                     autoFocus
                     sx={{ backgroundColor: "white", borderRadius: 1 }}
-                    error={meta.touched && !!meta.error} // نمایش خطا
-                    helperText={meta.touched && meta.error} // پیام خطا
+                    error={meta.touched && !!meta.error}
+                    helperText={meta.touched && meta.error}
                   />
                 )}
               </Field>
@@ -129,16 +114,12 @@ const Login = ({ handlePageType }) => {
                   fontSize: "1rem",
                 }}
               >
-                Sign Up
+                Sign In
               </Button>
               <Box sx={{ textAlign: "center", mt: 2 }}>
                 <Typography variant="body2">
-                  Do you have an account?{" "}
-                  <Button
-                    onClick={handlePageType}
-                    underline="hover"
-                    sx={{ color: "#1976d2", fontWeight: "bold" }}
-                  >
+                  Don't have an account?{" "}
+                  <Button onClick={handlePageType} sx={{ color: "#1976d2", fontWeight: "bold" }}>
                     Sign Up
                   </Button>
                 </Typography>
