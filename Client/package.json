@@ -17,6 +17,7 @@
     "formik": "^2.4.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hot-toast": "^2.5.1",
     "react-router-dom": "^7.1.5",
     "yup": "^1.6.1"
   },

@@ -8,8 +8,9 @@ import Auth from './Pages/Auth'
 import Categories from './Pages/Categories'
 import Tasks from './Pages/Tasks'
 import Profile from './Pages/Profile'
+import { Toaster } from 'react-hot-toast'
 const App = () => {
-  const {token}=useContext(AuthContext)
+  const token=localStorage.getItem('token')
   console.log(token)
   return (
     <>
@@ -24,6 +25,7 @@ const App = () => {
 </Routes>
 
       </Box>
+      <Toaster/>
     </>
   )
 }
