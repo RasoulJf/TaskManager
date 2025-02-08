@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Field, Formik } from "formik";
 import notify from "../../../../Utils/notify";
 import { AuthContext } from "../../../../Utils/AuthContext";
+import fetchData from "../../../../Utils/fetchData";
 
 const Login = ({ handlePageType }) => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ const Login = ({ handlePageType }) => {
 
   const handleLogin = async (values) => {
     try {
-      const response = await fetch("http://localhost:5000/api/auth", {
+      const response = await fetchData("auth", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -31,15 +32,13 @@ const Login = ({ handlePageType }) => {
         body: JSON.stringify(values),
       });
 
-      const data = await response.json();
-      console.log(data)
-      if (data?.success) {
+    
+      if (response?.success) {
         notify("Login Successfully", "success");
-        handleAuth(data?.data?.token, data?.data?.user);
-        localStorage.setItem("token", data?.data?.token);
+        handleAuth(response?.data?.token, response?.data?.user);
         navigate("/");
       } else {
-        notify(data?.message || "Login Failed", "error");
+        notify(response?.message || "Login Failed", "error");
       }
     } catch (error) {
       console.error("Login error:", error);

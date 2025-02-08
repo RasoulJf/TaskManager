@@ -5,13 +5,13 @@ import { useNavigate } from 'react-router-dom';
 export  const AuthContext = createContext();
 // Create a provider component
 const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem("token") || null);
   const [user, setUser] = useState(null);
 
   const handleAuth = (newToken,newUser) => {
     setToken(newToken);
     setUser(newUser);
-    // navigate('/auth')
+    localStorage.setItem("token", newToken);
   };
 
   return (

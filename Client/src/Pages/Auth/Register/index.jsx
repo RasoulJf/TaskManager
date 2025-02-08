@@ -1,9 +1,9 @@
 import React from "react";
 import { Container, Typography, TextField, Button, Box } from "@mui/material";
 import * as yup from "yup"; // اصلاح این خط
-import { useNavigate } from "react-router-dom";
 import { Field, Formik } from "formik";
 import notify from "../../../../Utils/notify";
+import fetchData from "../../../../Utils/fetchData";
 const Register = ({ handlePageType }) => {
   const validationSchema = yup.object({
     username: yup
@@ -26,7 +26,7 @@ const Register = ({ handlePageType }) => {
   const handleRegister = async (values) => {
     // اضافه کردن پارامتر values
     try {
-      const res = await fetch("http://localhost:5000/api/auth/register", {
+      const response = await fetchData("auth/register", {
         method: "POST",
         headers: {
           // اصلاح این خط (Headers به headers تغییر یابد)
@@ -35,8 +35,8 @@ const Register = ({ handlePageType }) => {
         body: JSON.stringify(values),
       }
     );
-    console.log(res)
-    if(res?.ok){
+  
+    if(response?.success){
       notify('Register Successfully','success')
       handlePageType()
     }else{
