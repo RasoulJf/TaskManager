@@ -7,13 +7,19 @@ import fetchData from "../../../../Utils/fetchData";
 
 const Register = ({ handlePageType }) => {
   const validationSchema = yup.object({
-    username: yup.string().required("Username Is Required").min(3, "Username Must Be 3 Character"),
-    email: yup.string().required("Email is required").matches(/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/, "Email Not Valid"),
+    username: yup
+      .string()
+      .required("Username is required")
+      .min(3, "Username must be at least 3 characters"),
+    email: yup
+      .string()
+      .required("Email is required")
+      .matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/, "Email is not valid"),
     password: yup
       .string()
       .required("Password is required")
       .matches(
-        /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/,
+        /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
         "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character"
       ),
   });
@@ -29,13 +35,14 @@ const Register = ({ handlePageType }) => {
       });
 
       if (response?.success) {
-        notify("Register Successfully", "success");
+        notify("Registered successfully!", "success");
         handlePageType();
       } else {
-        notify("Register Failed", "error");
+        notify(response?.message || "Registration failed. Please try again.", "error");
       }
     } catch (error) {
-      console.log(error);
+      console.error("Register error:", error);
+      notify("An error occurred. Please try again.", "error");
     }
   };
 
@@ -47,18 +54,22 @@ const Register = ({ handlePageType }) => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          backgroundColor: "#f5f5f5",
+          backgroundColor: "background.default",
           padding: 4,
-          borderRadius: 2,
+          borderRadius: "borderRadius",
           boxShadow: 3,
         }}
       >
-        <Typography component="h1" variant="h5" sx={{ fontWeight: "bold", mb: 2 }}>
+        <Typography component="h1" variant="h5" fontWeight="bold" mb={2}>
           Sign Up
         </Typography>
-        <Formik initialValues={{ username: "", email: "", password: "" }} validationSchema={validationSchema} onSubmit={handleRegister}>
+        <Formik
+          initialValues={{ username: "", email: "", password: "" }}
+          validationSchema={validationSchema}
+          onSubmit={handleRegister}
+        >
           {({ handleSubmit }) => (
-            <Box component="form" noValidate sx={{ mt: 1, width: "100%" }} onSubmit={handleSubmit}>
+            <Box component="form" noValidate onSubmit={handleSubmit} mt={1} width="100%">
               <Field name="username">
                 {({ field, meta }) => (
                   <TextField
@@ -70,7 +81,10 @@ const Register = ({ handlePageType }) => {
                     label="Username"
                     autoComplete="username"
                     autoFocus
-                    sx={{ backgroundColor: "white", borderRadius: 1 }}
+                    sx={{
+                      backgroundColor: "background.paper",
+                      borderRadius: "borderRadius",
+                    }}
                     error={meta.touched && !!meta.error}
                     helperText={meta.touched && meta.error}
                   />
@@ -86,7 +100,10 @@ const Register = ({ handlePageType }) => {
                     id="email"
                     label="Email Address"
                     autoComplete="email"
-                    sx={{ backgroundColor: "white", borderRadius: 1 }}
+                    sx={{
+                      backgroundColor: "background.paper",
+                      borderRadius: "borderRadius",
+                    }}
                     error={meta.touched && !!meta.error}
                     helperText={meta.touched && meta.error}
                   />
@@ -103,7 +120,10 @@ const Register = ({ handlePageType }) => {
                     type="password"
                     id="password"
                     autoComplete="current-password"
-                    sx={{ backgroundColor: "white", borderRadius: 1 }}
+                    sx={{
+                      backgroundColor: "background.paper",
+                      borderRadius: "borderRadius",
+                    }}
                     error={meta.touched && !!meta.error}
                     helperText={meta.touched && meta.error}
                   />
@@ -116,18 +136,19 @@ const Register = ({ handlePageType }) => {
                 sx={{
                   mt: 3,
                   mb: 2,
-                  backgroundColor: "#1976d2",
-                  "&:hover": { backgroundColor: "#1565c0" },
+                  backgroundColor: "primary.main",
+                  "&:hover": { backgroundColor: "primary.dark" },
                   padding: 1.5,
                   fontSize: "1rem",
+                  borderRadius: "borderRadius",
                 }}
               >
                 Sign Up
               </Button>
               <Box sx={{ textAlign: "center", mt: 2 }}>
                 <Typography variant="body2">
-                  Do you have an account?{" "}
-                  <Button onClick={handlePageType} sx={{ color: "#1976d2", fontWeight: "bold" }}>
+                  Already have an account?{" "}
+                  <Button onClick={handlePageType} sx={{ color: "primary.main", fontWeight: "bold" }}>
                     Sign In
                   </Button>
                 </Typography>

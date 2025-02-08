@@ -9,10 +9,13 @@ import fetchData from "../../../../Utils/fetchData";
 
 const Login = ({ handlePageType }) => {
   const navigate = useNavigate();
-  const {handleAuth} = useContext(AuthContext);
+  const { handleAuth } = useContext(AuthContext);
 
   const validationSchema = yup.object({
-    username: yup.string().required("Username is required").min(3, "Username must be at least 3 characters"),
+    username: yup
+      .string()
+      .required("Username is required")
+      .min(3, "Username must be at least 3 characters"),
     password: yup
       .string()
       .required("Password is required")
@@ -32,7 +35,6 @@ const Login = ({ handlePageType }) => {
         body: JSON.stringify(values),
       });
 
-    
       if (response?.success) {
         notify("Login Successfully", "success");
         handleAuth(response?.data?.token, response?.data?.user);
@@ -49,23 +51,37 @@ const Login = ({ handlePageType }) => {
   return (
     <Container component="main" maxWidth="xs">
       <Box
-        sx={{
-          marginTop: 8,
+        sx={(theme) => ({
+          marginTop: theme.spacing(8),
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          backgroundColor: "#f5f5f5",
-          padding: 4,
-          borderRadius: 2,
-          boxShadow: 3,
-        }}
+          backgroundColor: theme.palette.background.default,
+          padding: theme.spacing(4),
+          borderRadius: theme.shape.borderRadius,
+          boxShadow: theme.shadows[2],
+        })}
       >
-        <Typography component="h1" variant="h5" sx={{ fontWeight: "bold", mb: 2 }}>
+        <Typography
+         component="h1" variant="h5" fontWeight="bold" mb={2}
+        >
           Sign In
         </Typography>
-        <Formik initialValues={{ username: "", password: "" }} validationSchema={validationSchema} onSubmit={handleLogin}>
+        <Formik
+          initialValues={{ username: "", password: "" }}
+          validationSchema={validationSchema}
+          onSubmit={handleLogin}
+        >
           {({ handleSubmit }) => (
-            <Box component="form" noValidate sx={{ mt: 1, width: "100%" }} onSubmit={handleSubmit}>
+            <Box
+              component="form"
+              noValidate
+              onSubmit={handleSubmit}
+              sx={(theme) => ({
+                marginTop: theme.spacing(1),
+                width: "100%",
+              })}
+            >
               <Field name="username">
                 {({ field, meta }) => (
                   <TextField
@@ -77,7 +93,10 @@ const Login = ({ handlePageType }) => {
                     label="Username"
                     autoComplete="username"
                     autoFocus
-                    sx={{ backgroundColor: "white", borderRadius: 1 }}
+                    sx={(theme) => ({
+                      backgroundColor: theme.palette.background.paper,
+                      borderRadius: theme.shape.borderRadius / 2,
+                    })}
                     error={meta.touched && !!meta.error}
                     helperText={meta.touched && meta.error}
                   />
@@ -94,7 +113,10 @@ const Login = ({ handlePageType }) => {
                     type="password"
                     id="password"
                     autoComplete="current-password"
-                    sx={{ backgroundColor: "white", borderRadius: 1 }}
+                    sx={(theme) => ({
+                      backgroundColor: theme.palette.background.paper,
+                      borderRadius: theme.shape.borderRadius / 2,
+                    })}
                     error={meta.touched && !!meta.error}
                     helperText={meta.touched && meta.error}
                   />
@@ -104,21 +126,35 @@ const Login = ({ handlePageType }) => {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{
-                  mt: 3,
-                  mb: 2,
-                  backgroundColor: "#1976d2",
-                  "&:hover": { backgroundColor: "#1565c0" },
-                  padding: 1.5,
-                  fontSize: "1rem",
-                }}
+                sx={(theme) => ({
+                  marginTop: theme.spacing(3),
+                  marginBottom: theme.spacing(2),
+                  backgroundColor: theme.palette.primary.main,
+                  "&:hover": {
+                    backgroundColor: theme.palette.primary.dark,
+                  },
+                  padding: theme.spacing(1.5),
+                  fontSize: theme.typography.body1.fontSize,
+                  borderRadius: theme.shape.borderRadius,
+                })}
               >
                 Sign In
               </Button>
-              <Box sx={{ textAlign: "center", mt: 2 }}>
+              <Box
+                sx={(theme) => ({
+                  textAlign: "center",
+                  marginTop: theme.spacing(2),
+                })}
+              >
                 <Typography variant="body2">
                   Don't have an account?{" "}
-                  <Button onClick={handlePageType} sx={{ color: "#1976d2", fontWeight: "bold" }}>
+                  <Button
+                    onClick={handlePageType}
+                    sx={(theme) => ({
+                      color: theme.palette.primary.main,
+                      fontWeight: theme.typography.fontWeightBold,
+                    })}
+                  >
                     Sign Up
                   </Button>
                 </Typography>
