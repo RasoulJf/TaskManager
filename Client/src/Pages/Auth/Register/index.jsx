@@ -49,16 +49,16 @@ const Register = ({ handlePageType }) => {
   return (
     <Container component="main" maxWidth="xs">
       <Box
-        sx={{
-          marginTop: 8,
+        sx={(theme) => ({
+          marginTop: theme.spacing(8),
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          backgroundColor: "background.default",
-          padding: 4,
-          borderRadius: "borderRadius",
-          boxShadow: 3,
-        }}
+          backgroundColor: theme.palette.background.default,
+          padding: theme.spacing(4),
+          borderRadius: theme.shape.borderRadius,
+          boxShadow: theme.shadows[2],
+        })}
       >
         <Typography component="h1" variant="h5" fontWeight="bold" mb={2}>
           Sign Up
@@ -81,10 +81,10 @@ const Register = ({ handlePageType }) => {
                     label="Username"
                     autoComplete="username"
                     autoFocus
-                    sx={{
-                      backgroundColor: "background.paper",
-                      borderRadius: "borderRadius",
-                    }}
+                    sx={(theme) => ({
+                      backgroundColor: theme.palette.background.paper,
+                      borderRadius: theme.shape.borderRadius / 2,
+                    })}
                     error={meta.touched && !!meta.error}
                     helperText={meta.touched && meta.error}
                   />
@@ -100,10 +100,10 @@ const Register = ({ handlePageType }) => {
                     id="email"
                     label="Email Address"
                     autoComplete="email"
-                    sx={{
-                      backgroundColor: "background.paper",
-                      borderRadius: "borderRadius",
-                    }}
+                    sx={(theme) => ({
+                      backgroundColor: theme.palette.background.paper,
+                      borderRadius: theme.shape.borderRadius / 2,
+                    })}
                     error={meta.touched && !!meta.error}
                     helperText={meta.touched && meta.error}
                   />
@@ -119,11 +119,11 @@ const Register = ({ handlePageType }) => {
                     label="Password"
                     type="password"
                     id="password"
-                    autoComplete="current-password"
-                    sx={{
-                      backgroundColor: "background.paper",
-                      borderRadius: "borderRadius",
-                    }}
+                    autoComplete="new-password"
+                    sx={(theme) => ({
+                      backgroundColor: theme.palette.background.paper,
+                      borderRadius: theme.shape.borderRadius / 2,
+                    })}
                     error={meta.touched && !!meta.error}
                     helperText={meta.touched && meta.error}
                   />
@@ -133,19 +133,21 @@ const Register = ({ handlePageType }) => {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{
-                  mt: 3,
-                  mb: 2,
-                  backgroundColor: "primary.main",
-                  "&:hover": { backgroundColor: "primary.dark" },
-                  padding: 1.5,
-                  fontSize: "1rem",
-                  borderRadius: "borderRadius",
-                }}
+                sx={(theme) => ({
+                  marginTop: theme.spacing(3),
+                  marginBottom: theme.spacing(2),
+                  backgroundColor: theme.palette.primary.main,
+                  "&:hover": {
+                    backgroundColor: theme.palette.primary.dark,
+                  },
+                  padding: theme.spacing(1.5),
+                  fontSize: theme.typography.body1.fontSize,
+                  borderRadius: theme.shape.borderRadius,
+                })}
               >
                 Sign Up
               </Button>
-              <Box sx={{ textAlign: "center", mt: 2 }}>
+              <Box sx={{ textAlign: "center", marginTop: 2 }}>
                 <Typography variant="body2">
                   Already have an account?{" "}
                   <Button onClick={handlePageType} sx={{ color: "primary.main", fontWeight: "bold" }}>
