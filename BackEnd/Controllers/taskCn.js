@@ -12,6 +12,7 @@ export const createTask=catchAsync(async(req,res,next)=>{
 })
 export const getAllTasks=catchAsync(async(req,res,next)=>{
     const queryString = {...req.query,filters:{...req.query.fiters,userId:req.userId}}
+    console.log(queryString)
     const features = new ApiFeatures(Task,queryString).filter().paginate().sort().limitFields().search().populate()
     const tasks = await features.query
     return res.status(200).json({
